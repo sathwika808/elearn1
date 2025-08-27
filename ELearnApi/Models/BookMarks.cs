@@ -2,14 +2,14 @@
 
 namespace ELearnApi.Models
 {
-     
+
     public class BookMarks
     {
 
-    public int Id { get; set; }
-     
-    public string CardId { get; set; }
-        public string question { get; set; }
-    public string answer { get; set; }
+        public int Id { get; set; }
+
+        public long CardId { get; set; }
+       
+        public Card Card { get; set; }
     }
 }

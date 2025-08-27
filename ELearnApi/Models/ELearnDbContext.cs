@@ -11,15 +11,15 @@ namespace ELearnApi.Models
         public DbSet<Feedback> feedback { get; set; }
         public DbSet<BookMarks> BookMarks
         { get; set; }
-        //public DbSet<Courses> Courses
-        //{ get; set; }
-        //public DbSet<Reports> Reports
-        //{ get; set; }
-        //public DbSet<Sets> Sets
-        //{ get; set; }
-        //public DbSet<Users> Users
-        //{ get; set; }
-        public DbSet<Questions> Questions
+        public DbSet<Courses> Courses
+        { get; set; }
+        public DbSet<Reports> Reports
+        { get; set; }
+        
+        public DbSet<Users> Users
+        { get; set; }
+      
+        public DbSet<Card> Cards
         { get; set; }
     }
 }

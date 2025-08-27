@@ -1,6 +1,8 @@
-﻿using ELearnApi.Models;
-using Microsoft.AspNetCore.Http;
+﻿
+
+using ELearnApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ELearnApi.Controllers
 {
@@ -8,68 +10,74 @@ namespace ELearnApi.Controllers
     [ApiController]
     public class BookMarkController : ControllerBase
     {
-        ELearnDbContext db = null;
-        public BookMarkController(ELearnDbContext c)
+        private readonly ELearnDbContext db;
+
+        public BookMarkController(ELearnDbContext context)
         {
-            db= c;  
-
-        }
-
-
-        [HttpGet]
-
-        public IActionResult GetBookMark()
-        {
-            var BookMarks = db.BookMarks.ToList();
-            if (BookMarks == null)
-            {
-                return NotFound("No Feedbacks");
-            }
-            return Ok(BookMarks);
-        }
-
-
-
-        [HttpGet("{id}")]
-
-        public IActionResult GetBookMarkById(int id)
-        {
-            var Bookmarks = db.BookMarks.Find(id);
-            if (Bookmarks == null)
-            {
-                return NotFound($"Feedback with {id} is not found");
-            }
-            return Ok(Bookmarks);
-        }
-
-
-
-        [HttpPost]
-        public IActionResult PostBookMark(BookMarks postedBookmark)
-        {
-           if(postedBookmark == null)            {
-                return BadRequest("post valid  bookmark"); 
-            }
-            db.BookMarks.Add(postedBookmark);
-            db.SaveChanges();
-            return Ok("Posted succesfully");
-            
+            db = context;
         }
 
         [HttpDelete("{id}")]
-
-        public IActionResult DeleteFeedback(int id)
+        public async Task<IActionResult> DeleteBookMark(long id)
         {
-            var BookmarkToBeDeleted = db.feedback.Find(id);
-            if (BookmarkToBeDeleted == null)
-            {
-                return NotFound($"Feedback with id {id} is not found");
-            }
-            db.feedback.Remove(BookmarkToBeDeleted);
-            db.SaveChanges();
-            return Ok("deleted Successfully");
+            var bookmarkToBeDeleted = await db.BookMarks.FindAsync(id);
+            if (bookmarkToBeDeleted == null)
+                return NotFound($"Bookmark with id {id} not found");
+
+            db.BookMarks.Remove(bookmarkToBeDeleted);
+            await db.SaveChangesAsync();
+
+            return Ok("Deleted Successfully");
         }
 
 
+        // GET all bookmarks
+        [HttpGet]
+        public async Task<IActionResult> GetBookmarks()
+        {
+            var bookmarks = await db.BookMarks
+                .Include(b => b.Card)   // include card details
+                .Select(b => new {
+                    id = b.Id,
+                    cardId = b.CardId,
+                    question = b.Card.Question,
+                    answer = b.Card.Answer
+                })
+                .ToListAsync();
+
+            return Ok(bookmarks);
+        }
+
+
+       
+        [HttpPost("toggle")]
+        public async Task<IActionResult> ToggleBookmark([FromBody] BookmarkDTO dto)
+        {
+            var existing = await db.BookMarks.FirstOrDefaultAsync(b => b.CardId == dto.CardId);
+
+            if (existing != null)
+            {
+                db.BookMarks.Remove(existing);
+                await db.SaveChangesAsync();
+                return Ok(new { isBookmarked = false, id = (int?)null });
+            }
+
+            var bookmark = new BookMarks { CardId = dto.CardId };
+            db.BookMarks.Add(bookmark);
+            await db.SaveChangesAsync();
+
+            // Fetch full card details
+            var card = await db.Cards.FindAsync(dto.CardId);
+
+            return Ok(new
+            {
+                isBookmarked = true,
+                id = bookmark.Id,
+                cardId = card.Id,
+                question = card.Question,
+                answer = card.Answer
+            });
+        }
     }
 }
+
