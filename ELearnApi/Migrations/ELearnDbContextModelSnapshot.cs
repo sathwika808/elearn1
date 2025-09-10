@@ -29,8 +29,8 @@ namespace ELearnApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<long>("CardId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("CardId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -41,11 +41,11 @@ namespace ELearnApi.Migrations
 
             modelBuilder.Entity("ELearnApi.Models.Card", b =>
                 {
-                    b.Property<long>("CardId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("CardId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Answer")
                         .IsRequired()
@@ -64,7 +64,7 @@ namespace ELearnApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CardId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CourseId");
 

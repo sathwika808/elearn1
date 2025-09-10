@@ -5,26 +5,11 @@
 namespace ELearnApi.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class initialcreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "BookMarks",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CardId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    question = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    answer = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BookMarks", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Courses",
                 columns: table => new
@@ -32,7 +17,7 @@ namespace ELearnApi.Migrations
                     CourseId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -89,13 +74,12 @@ namespace ELearnApi.Migrations
                 name: "Cards",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Question = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Answer = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Favorite = table.Column<bool>(type: "bit", nullable: false),
-                    IsReviewed = table.Column<bool>(type: "bit", nullable: false),
-                    BookmarkEntryId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Favorite = table.Column<bool>(type: "bit",defaultValue:false, nullable: false),
+                    IsReviewed = table.Column<bool>(type: "bit", defaultValue: false, nullable: false),
                     CourseId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -108,6 +92,30 @@ namespace ELearnApi.Migrations
                         principalColumn: "CourseId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "BookMarks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CardId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookMarks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BookMarks_Cards_CardId",
+                        column: x => x.CardId,
+                        principalTable: "Cards",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BookMarks_CardId",
+                table: "BookMarks",
+                column: "CardId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cards_CourseId",
@@ -122,9 +130,6 @@ namespace ELearnApi.Migrations
                 name: "BookMarks");
 
             migrationBuilder.DropTable(
-                name: "Cards");
-
-            migrationBuilder.DropTable(
                 name: "feedback");
 
             migrationBuilder.DropTable(
@@ -132,6 +137,9 @@ namespace ELearnApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Cards");
 
             migrationBuilder.DropTable(
                 name: "Courses");

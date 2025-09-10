@@ -169,3 +169,11 @@ D:\msnet\ELearnApi\ELearnApi\obj\Debug\net8.0\refint\ELearnApi.dll
 D:\msnet\ELearnApi\ELearnApi\obj\Debug\net8.0\ELearnApi.pdb
 D:\msnet\ELearnApi\ELearnApi\obj\Debug\net8.0\ELearnApi.genruntimeconfig.cache
 D:\msnet\ELearnApi\ELearnApi\obj\Debug\net8.0\ref\ELearnApi.dll
+D:\msnet\ELearnApi\ELearnApi\bin\Debug\net8.0\System.Web.Cors.dll
+D:\msnet\ELearnApi\ELearnApi\bin\Debug\net8.0\System.Net.Http.Formatting.dll
+D:\msnet\ELearnApi\ELearnApi\bin\Debug\net8.0\System.Web.Http.dll
+D:\msnet\ELearnApi\ELearnApi\bin\Debug\net8.0\System.Web.Http.Cors.dll
+D:\msnet\ELearnApi\ELearnApi\bin\Debug\net8.0\Newtonsoft.Json.dll
+D:\msnet\ELearnApi\ELearnApi\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
+D:\msnet\ELearnApi\ELearnApi\obj\Debug\net8.0\ELearnApi.sourcelink.json
+D:\msnet\ELearnApi\ELearnApi\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

@@ -1,5 +1,4 @@
 ﻿
-
 using ELearnApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +17,7 @@ namespace ELearnApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBookMark(long id)
+        public async Task<IActionResult> DeleteBookMark(int id)
         {
             var bookmarkToBeDeleted = await db.BookMarks.FindAsync(id);
             if (bookmarkToBeDeleted == null)
@@ -32,6 +31,8 @@ namespace ELearnApi.Controllers
 
 
         // GET all bookmarks
+  
+        
         [HttpGet]
         public async Task<IActionResult> GetBookmarks()
         {

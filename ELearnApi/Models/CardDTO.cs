@@ -4,8 +4,8 @@ namespace ELearnApi.Models
 {
     public class CardDTO
     {
-        [Key]
-        public long Id { get; set; }
+        
+        public int Id { get; set; }
         public string Question { get; set; }
         public string Answer { get; set; }
         public bool Favorite { get; set; }

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ELearnApi.Migrations
 {
     [DbContext(typeof(ELearnDbContext))]
-    [Migration("20250821043137_bookmarkupdate")]
-    partial class bookmarkupdate
+    [Migration("20250828104520_initialcreate")]
+    partial class initialcreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,8 +32,8 @@ namespace ELearnApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<long>("CardId")
-                        .HasColumnType("bigint");
+                    b.Property<int>("CardId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -44,11 +44,11 @@ namespace ELearnApi.Migrations
 
             modelBuilder.Entity("ELearnApi.Models.Card", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Answer")
                         .IsRequired()

@@ -4,7 +4,7 @@ namespace ELearnApi.Models
 {
     public class BookmarkDTO
     {
-        [JsonPropertyName("cardId")]
-        public long CardId { get; set; }
+        [JsonPropertyName("cardId")]   
+        public int CardId { get; set; }
     }
 }

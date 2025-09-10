@@ -41,7 +41,7 @@ namespace ELearnApi.Controllers
             return Ok(courses);
         }
 
-        // GET: api/Course/5
+        // GET: api/Course/5        
         [HttpGet("{id}")]
         public IActionResult GetCourseById(int id)
         {
@@ -88,8 +88,8 @@ namespace ELearnApi.Controllers
                 {  Id = card.Id,
                     Question = card.Question,
                     Answer = card.Answer,
-                    Favorite = card.Favorite,
-                    IsReviewed = card.IsReviewed,
+                    Favorite = false,
+                    IsReviewed = false,
                 }).ToList()
             };
 

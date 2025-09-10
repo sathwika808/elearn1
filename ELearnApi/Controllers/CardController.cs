@@ -1,5 +1,6 @@
 ﻿using ELearnApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ELearnApi.Controllers
 {
@@ -14,6 +15,26 @@ namespace ELearnApi.Controllers
             db = context;
         }
 
+
+        [HttpPut("{courseId}/Card/{cardId}/review")]
+        public IActionResult MarkCardAsReviewed(int courseId, int cardId)
+        {
+            var course = db.Courses
+                .Include(c => c.Cards)
+                .FirstOrDefault(c => c.CourseId == courseId);
+
+            if (course == null)
+                return NotFound($"Course {courseId} not found");
+
+            var card = course.Cards.FirstOrDefault(c => c.Id == cardId);
+            if (card == null)
+                return NotFound($"Card {cardId} not found in Course {courseId}");
+
+            card.IsReviewed = true;
+            db.SaveChanges();
+
+            return Ok(new { cardId = card.Id, isReviewed = card.IsReviewed });
+        }
 
 
         // GET all cards
@@ -40,7 +61,7 @@ namespace ELearnApi.Controllers
                           .Where(c => c.CourseId == courseId)
                           .Select(c => new CardDTO
                           {
-                              Id = c.Id,
+                              Id =(int ) c.Id,
                               Question = c.Question,
                               Answer = c.Answer,
                               Favorite = c.Favorite,
@@ -84,11 +105,11 @@ namespace ELearnApi.Controllers
 
         // PUT update card
         [HttpPut("{id}")]
-        public IActionResult UpdateCard(long id, CardDTO dto)
+        public IActionResult UpdateCard(int id, CardDTO dto)
         {
             var card = db.Cards.Find(id);
             if (card == null) return NotFound($"Card {id} not found");
-
+            card.Id = dto.Id;
             card.Question = dto.Question;
             card.Answer = dto.Answer;
             card.Favorite = dto.Favorite;
@@ -102,7 +123,7 @@ namespace ELearnApi.Controllers
 
         // DELETE card
         [HttpDelete("{id}")]
-        public IActionResult DeleteCard(long id)
+        public IActionResult DeleteCard(int id)
         {
             var card = db.Cards.Find(id);
             if (card == null) return NotFound($"Card {id} not found");

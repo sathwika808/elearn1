@@ -1,20 +1,29 @@
 ﻿using ELearnApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 
 namespace ELearnApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
     public class UserController : ControllerBase
+
     {
+        IConfiguration config;
         ELearnDbContext db = null;
-        public UserController(ELearnDbContext c)
+        public UserController(IConfiguration config, ELearnDbContext c)
         {
-          db = c;
+            this.config = config;
+    
+            db = c;
         }
 
+        
         [HttpGet]
 
         public IActionResult GetUser()
@@ -46,7 +55,7 @@ namespace ELearnApi.Controllers
             existingUser.Email = updatedUser.Email;
             existingUser.Password = updatedUser.Password;
 
-            
+
 
             db.Users.Update(existingUser);
             db.SaveChanges();
@@ -54,7 +63,7 @@ namespace ELearnApi.Controllers
             return Ok(existingUser);
         }
 
-      
+
 
         [HttpPost]
         public IActionResult postUser(Users PostedUsers)
@@ -66,7 +75,44 @@ namespace ELearnApi.Controllers
             db.Users.Add(PostedUsers);
             db.SaveChanges();
             return Ok("Posted succesfully");
+        }
+
+        [HttpPost("Login")]
+        public IActionResult Login(UsersDto PostedUsers) {
+
+            if (PostedUsers == null)
+            {
+                return BadRequest("Logic data is null");
+            }
+            // logic for login process 
+            //If login username and password are correct then proceed to generate token
+            var user = db.Users.Where(u => u.Password == PostedUsers.Password && u.Username == PostedUsers.Username).FirstOrDefault();
+            if (user == null)
+            {
+
+
+                return BadRequest("Invalid Credentials");
+            }
+            //generate the JWT token
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var expiry = Convert.ToInt32(config["Jwt:ExpireMinutes"]);
+            var Sectoken = new JwtSecurityToken(config["Jwt:Issuer"],
+              config["Jwt:Audience"],
+              null,
+              expires: DateTime.Now.AddMinutes(expiry),
+              signingCredentials: credentials);
+
+            var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
+
+            return Ok(new { Token = token, UserName = user.Username, UserId = user.id , user.Email , user.Password});
 
         }
+
     }
-}
+
+
+
+
+    }
+

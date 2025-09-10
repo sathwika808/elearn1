@@ -8,7 +8,7 @@ namespace ELearnApi.Models
 
         public int Id { get; set; }
 
-        public long CardId { get; set; }
+        public int CardId { get; set; }
        
         public Card Card { get; set; }
     }
