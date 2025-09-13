@@ -15,7 +15,6 @@ namespace ELearnApi.Controllers
             db = context;
         }
 
-        // GET: api/Course
         [HttpGet]
         public IActionResult GetCourses()
         {
@@ -26,6 +25,7 @@ namespace ELearnApi.Controllers
                     CourseId = c.CourseId,
                     Title = c.Title,
                     Description = c.Description,
+                    VideoUrl = c.VideoUrl,
                     Cards = c.Cards.Select(card => new CardDTO
                     {
                         Id = card.Id,
@@ -41,12 +41,12 @@ namespace ELearnApi.Controllers
             return Ok(courses);
         }
 
-        // GET: api/Course/5        
+               
         [HttpGet("{id}")]
         public IActionResult GetCourseById(int id)
         {
             var course = db.Courses
-                .Include(c => c.Cards)   // load cards
+                .Include(c => c.Cards)  
                 .FirstOrDefault(c => c.CourseId == id);
 
             if (course == null)
@@ -57,6 +57,7 @@ namespace ELearnApi.Controllers
                 CourseId = course.CourseId,
                 Title = course.Title,
                 Description = course.Description,
+                VideoUrl = course.VideoUrl,
                 Cards = course.Cards.Select(card => new CardDTO
                 {
                     Id = card.Id,   
@@ -74,7 +75,7 @@ namespace ELearnApi.Controllers
 
 
 
-        // POST: api/Course
+      
         [HttpPost]
         public IActionResult PostCourse(CourseDTO dto)
         {
@@ -84,6 +85,7 @@ namespace ELearnApi.Controllers
             {
                 Title = dto.Title,
                 Description = dto.Description,
+                VideoUrl = dto.VideoUrl,
                 Cards = dto.Cards.Select(card => new Card
                 {  Id = card.Id,
                     Question = card.Question,
@@ -99,7 +101,7 @@ namespace ELearnApi.Controllers
             return Ok("Course created successfully with questions");
         }
 
-        // DELETE: api/Course/5
+       
         [HttpDelete("{id}")]
         public IActionResult DeleteCourse(int id)
         {

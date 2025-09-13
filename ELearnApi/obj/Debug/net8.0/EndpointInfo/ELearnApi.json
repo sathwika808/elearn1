@@ -715,6 +715,10 @@
             "type": "string",
             "nullable": true
           },
+          "videoUrl": {
+            "type": "string",
+            "nullable": true
+          },
           "cards": {
             "type": "array",
             "items": {
